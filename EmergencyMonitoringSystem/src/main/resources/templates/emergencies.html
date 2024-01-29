@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Monitoring</title>
+    <base href="/">
+    <link rel="stylesheet"  th:href="@{styles/emergencies.css}" />
+<!--    <link rel="shortcut icon" href="../static/em.ico">-->
+</head>
+<body>
+<nav>
+    <li><a class="active" href="#home">Home</a></li>
+    <li><a href="#about">About</a></li>
+    <li class="user-dropdown">
+        <a href="javascript:void(0)" class="dropbtn">User</a>
+        <div class="user-dropdown-content">
+            <a href="#">My profile</a>
+            <a href="#">Add emergency</a>
+            <a href="#">Manage emergencies</a>
+            <a href="#">Sign out</a>
+        </div>
+    </li>
+
+</nav>
+
+<div class="filter">
+    <button class="location-dropbtn">Dropdown</button>
+    <div class="dropdown-content">
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+    </div>
+    <button class="type-dropbtn">Dropdown</button>
+    <div class="dropdown-content" th:each="emergency: ${emergencies.stream().map(e -> e.)}">
+        <a href="#">th:text="${emergency.type}"</a>
+    </div>
+</div>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Location</th>
+        <th>Date</th>
+    </tr>
+    <tr th:each="emergency: ${emergencies}">
+        <td th:text="${emergency.name}"/>
+        <td th:text="${emergency.type}"/>
+        <td th:text="${emergency.location.country.isEmpty()} ?
+            (${emergency.location.city.isEmpty()} ? 'Not specified' : ${emergency.location.city})
+                : ${emergency.location.country} +
+                (${emergency.location.city.isEmpty()} ? '' : (', ' + ${emergency.location.city}))"/>
+        <td th:text="${#temporals.format(emergency.date,'dd MMMM yyyy HH:mm')}"/>
+    </tr>
+</table>
+</body>
+</html>
